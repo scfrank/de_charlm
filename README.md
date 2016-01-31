@@ -12,6 +12,7 @@ Virtualenv setup, in your project directory:
 virtualenv -p python3 venv
 source venv/bin/activate
 ```
+KenML depends on Boost >= 1.36.0 (install via your OS package manager).
 Install dependencies (cython and kenlm). Note that kenlm needs to
 support at least order 12. (I am not sure what the `-a` flag does.)
 ```
