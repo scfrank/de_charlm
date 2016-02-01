@@ -14,6 +14,10 @@ exa = 'asdf kjwe iru xc'
 exb = 'fewticlkjvi'
 exc = 'this is an english sentence'
 exd = 'please dont rate this as high as a german sentence'
+exe = ''
+exf = ' '
+exg = '.'
+
 
 
 class LMQuerier:
@@ -22,11 +26,18 @@ class LMQuerier:
         self.model = kenlm.LanguageModel(model_name)
         self.lower = lowercase
 
+    def query_lm(self, example):
+        ex = char_string(example)
+        return norm_score(ex)
+
     # Return length-normalised score
     def norm_score(self, example):
         s = self.model.score(example)
-        chrs = len(example)/2 # bc spaces
-        return s/chrs
+        # an empty string has a (low) 'unnormalised' score
+        if len(example) > 0:
+            chrs = len(example)/2 # bc spaces
+            s = s/chrs
+        return s
 
     def char_string(self, example):
         if self.lower:
@@ -42,7 +53,7 @@ class LMQuerier:
             l = self.char_string(ex)
             print('%s %s: %f' % (ex, '', self.norm_score(l)))
 
-        bad = [exa, exb, exc, exd]
+        bad = [exa, exb, exc, exd, exe, exf, exg]
         print("Bad examples")
         for ex in bad:
             l = self.char_string(ex)
