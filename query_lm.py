@@ -14,7 +14,7 @@ exa = 'asdf kjwe iru xc'
 exb = 'fewticlkjvi'
 exc = 'this is an english sentence'
 exd = 'please dont rate this as high as a german sentence'
-
+exe = ''
 
 class LMQuerier:
 
@@ -25,8 +25,12 @@ class LMQuerier:
     # Return length-normalised score
     def norm_score(self, example):
         s = self.model.score(example)
-        chrs = len(example)/2 # bc spaces
-        return s/chrs
+        if len(example) == 0:
+          # return the LM score for zero-length inputs
+          return s / 1
+        else:
+          chrs = len(example)/2 # bc spaces
+          return s/chrs
 
     def char_string(self, example):
         if self.lower:
@@ -42,7 +46,7 @@ class LMQuerier:
             l = self.char_string(ex)
             print('%s %s: %f' % (ex, '', self.norm_score(l)))
 
-        bad = [exa, exb, exc, exd]
+        bad = [exa, exb, exc, exd, exe]
         print("Bad examples")
         for ex in bad:
             l = self.char_string(ex)
