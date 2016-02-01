@@ -1,6 +1,6 @@
 
 This is a quick character language model (by default trained on German fiction
-text). It uses SRILM, KenLM and leans heavily on:
+text). It uses SRILM and KenLM and was helped by:
 http://victor.chahuneau.fr/notes/2012/07/03/kenlm.html
 
 # Installation/setup
@@ -13,30 +13,32 @@ virtualenv -p python3 venv
 source venv/bin/activate
 ```
 KenML depends on Boost >= 1.36.0 (install via your OS package manager).
-Install dependencies (cython and kenlm). Note that kenlm needs to
-support at least order 12. (I am not sure what the `-a` flag does.)
+Install dependencies (cython and kenlm).
 ```
 pip install cython
 git clone https://github.com/vchahun/kenlm.git
 cd kenlm
-./bjam --max-kenlm-order=12
+./bjam
 # compile LM estimation code
 python setup.py install # install Python module
 cd -
 ```
-(There should be a way to compile kenlm with `--max-kenlm-order=12' to
+(There should be a way to compile kenlm with `--max-kenlm-order=12` to
 enable better character language models but I couldn't get it to work
-with the python interface.
+with the python interface.)
 
 # Usage
 
-You probably want to use the LMQuerier in `query_lm.py':
+You probably want to use the LMQuerier in `query_lm.py`:
 ```
 from query_lm import LMQuerier
 
 lmq = LMQuerier(lm_model)
-lm_pplx = lmq.norm_score(example_string)
+lm_pplx = lmq.query_lm(example_string)
 ```
+`lmq.query_lm()` "tokenises" (using `char_string()`) and scores (using
+`norm_score()`) the string, which should be a regular string (e.g. "hier ist
+eine Schur").
 
 On the command line (where it will just do some basic testing),
 `query_lm.py` takes a model name:
@@ -47,7 +49,8 @@ usage: query_lm.py [-h] [--notlower] [--model MODEL]
 ```
 
 Lowercasing the data is default. If the model is estimated on
-non-lowercased data, you probably want to use the `notlower` flag.
+non-lowercased data, you probably want to use the `notlower` flag or set
+`lowercase=False` when initialising the LMQuerier.
 
 The model can be an arpa-formatted LM from SRILM or one that's been binarised using kenlm (see below).
 

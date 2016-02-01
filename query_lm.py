@@ -33,8 +33,11 @@ class LMQuerier:
     # Return length-normalised score
     def norm_score(self, example):
         s = self.model.score(example)
-        chrs = len(example)/2 # bc spaces
-        return s/chrs
+        # an empty string has a (low) 'unnormalised' score
+        if len(example) > 0:
+            chrs = len(example)/2 # bc spaces
+            s = s/chrs
+        return s
 
     def char_string(self, example):
         if self.lower:
