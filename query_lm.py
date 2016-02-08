@@ -22,12 +22,13 @@ exf = ' '
 exg = '.'
 
 
-"""LM corpus has 'french quotes' (« »). We want to replace quotes in input
-("") with these (or just strip them? Makes output less intelligible.) """
+"""LM corpus has 'french quotes' (which in German are like so »QUOTE«).
+We want to replace quotes in input ("") with these
+(or just strip them? Makes output less intelligible.) """
 def replace_quotes(chars):
     while '"' in chars: # quotes (should!) come in pairs.
-        chars = chars.replace('"', '«', 1)
         chars = chars.replace('"', '»', 1)
+        chars = chars.replace('"', '«', 1)
     return chars
 
 
